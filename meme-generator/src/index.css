@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Impact";
+  src: url("./assets/impact.ttf");
+}
+
+@layer base {
+    body {
+        @apply font-primary tracking-tight;
+    }
+}
+
+@layer components {
+    .input {
+        @apply rounded-lg border-neutral-300 focus:ring-0 focus:border-neutral-700
+    }
+}
+
+@layer utilities{
+    .meme-shadow {
+        --i: 2px;
+        letter-spacing: -0.04em;
+        
+        text-stroke: var(--i) #000000; 
+        -webkit-text-stroke: var(--i) #000000; 
+    }
+}
