@@ -1,24 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Meme from './Meme';
 
-import memeData from '../memeData';
-
 export default function Generator() {
+  const [memes, setMemes] = useState([]);
   const [meme, setMeme] = useState({
     topText: '',
     bottomText: '',
     randomImage: 'https://i.imgflip.com/30b1gx.jpg',
   });
+  const [formData, setFormData] = useState({
+    topText: '',
+    bottomText: '',
+  });
 
-  const [allMemeImages, setAllMemeImages] = useState(memeData);
+  useEffect(() => {
+    fetch('https://api.imgflip.com/get_memes')
+      .then((response) => response.json())
+      .then((data) => setMemes(data.data.memes));
+  }, []);
+
+  /**
+   * Handles form change
+   */
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const getMemeImage = () => {
-    const DATA = memeData.data.memes;
-    const randomIndex = Math.floor(Math.random() * DATA.length);
+    const randomIndex = Math.floor(Math.random() * memes.length);
 
     setMeme((prevMeme) => ({
       ...prevMeme,
-      randomImage: DATA[randomIndex].url,
+      randomImage: memes[randomIndex].url,
     }));
   };
 
@@ -26,8 +41,20 @@ export default function Generator() {
     <>
       <form className="mb-9">
         <div className="grid grid-cols-2 place-items-stretch gap-x-5 mb-5">
-          <input type="text" className="input" placeholder="Top Text" />
-          <input type="text" className="input" placeholder="Bottom Text" />
+          <input
+            type="text"
+            className="input"
+            placeholder="Top Text"
+            name="topText"
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            className="input"
+            placeholder="Bottom Text"
+            name="bottomText"
+            onChange={handleChange}
+          />
         </div>
         <button
           onClick={getMemeImage}
@@ -37,7 +64,11 @@ export default function Generator() {
           Get a new meme image 🖼️
         </button>
       </form>
-      <Meme url={meme.randomImage} />
+      <Meme
+        url={meme.randomImage}
+        topText={formData.topText}
+        bottomText={formData.bottomText}
+      />
     </>
   );
 }
