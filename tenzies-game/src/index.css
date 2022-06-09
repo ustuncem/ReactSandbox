@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply h-full min-h-screen font-primary text-primary bg-primary flex flex-col justify-center;
+  }
+}
