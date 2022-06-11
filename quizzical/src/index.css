@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply h-full;
+  }
+
+  body {
+    @apply min-h-screen h-full bg-secondary overflow-hidden font-primary text-primary-300;
+  }
+
+  #root {
+    @apply h-full;
+  }
+
+  input[type='radio'] {
+    @apply border-0 bg-transparent text-transparent w-0 h-0 opacity-0;
+  }
+}
+
+@layer components {
+  .radio-button {
+    @apply absolute inset-0 border-2 border-primary-200 rounded-lg group-hover:border-0 group-hover:bg-primary-100 peer-checked:border-0 peer-checked:bg-primary-100;
+  }
+}
