@@ -16,5 +16,6 @@ module.exports = {
     'prettier/prettier': ['error', prettierOptions],
     'react/jsx-filename-extension': 0,
     'react/prop-types': 'off',
+    'no-param-reassign': [2, { props: false }],
   },
 };

@@ -1,73 +1,67 @@
-import React from 'react';
+import React, { memo } from 'react';
+import { nanoid } from 'nanoid';
 
-function Question() {
+import createMarkup from '../helpers/createMarkup';
+
+function Question({ question, onChange, finished }) {
+  const { answers, id, text, userAnswer, correctAnswer } = question;
+
+  function determineClass(answer) {
+    if (finished && answer === correctAnswer)
+      return 'border-0 bg-green-400 peer-checked:bg-green-400 peer-hover:bg-green-400';
+
+    if (finished && answer !== correctAnswer && answer === userAnswer)
+      return 'border-0 bg-red-400 peer-checked:bg-red-400 peer-hover:bg-red-400';
+
+    return '';
+  }
+
   return (
-    <article className="mb-4">
+    <article className="mb-8">
       <header>
-        <h1 className="font-bold text-xl mb-2">
-          How would one say goodbye in Spanish?
-        </h1>
+        <h1
+          className="font-bold text-xl mb-2"
+          dangerouslySetInnerHTML={createMarkup(text)}
+        />
       </header>
       <div className="flex gap-x-4">
-        <label
-          htmlFor="answer1"
-          className="px-2 py-1 relative cursor-pointer group"
-        >
-          <span className="font-medium relative z-10">Bilmem Ne</span>
-          <input
-            type="radio"
-            name="answer1"
-            id="answer1"
-            value="Bilmem Ne"
-            className="peer"
-          />
-          <span className="radio-button" />
-        </label>
-        <label
-          htmlFor="answer2"
-          className="px-2 py-1 relative cursor-pointer group"
-        >
-          <span className="font-medium relative z-10">Bilmem Ne</span>
-          <input
-            type="radio"
-            name="answer1"
-            id="answer2"
-            value="Bilmem Ne"
-            className="peer"
-          />
-          <span className="radio-button" />
-        </label>
-        <label
-          htmlFor="answer3"
-          className="px-2 py-1 relative cursor-pointer group"
-        >
-          <span className="font-medium relative z-10">Bilmem Ne</span>
-          <input
-            type="radio"
-            name="answer1"
-            id="answer3"
-            value="Bilmem Ne"
-            className="peer"
-          />
-          <span className="radio-button" />
-        </label>
-        <label
-          htmlFor="answer4"
-          className="px-2 py-1 relative cursor-pointer group"
-        >
-          <span className="font-medium relative z-10">Bilmem Ne</span>
-          <input
-            type="radio"
-            name="answer1"
-            id="answer4"
-            value="Bilmem Ne"
-            className="peer"
-          />
-          <span className="radio-button" />
-        </label>
+        {answers.map((answer, i) => (
+          <label
+            htmlFor={`${id}_${i}`}
+            key={nanoid()}
+            className={`px-2 pl-3 py-1 relative text-center group ${
+              !finished && 'cursor-pointer'
+            }`}
+          >
+            <span
+              className={`font-medium relative z-10 ${
+                finished &&
+                answer !== correctAnswer &&
+                answer === userAnswer &&
+                'line-through'
+              }`}
+              dangerouslySetInnerHTML={createMarkup(answer)}
+            />
+            <input
+              type="radio"
+              name={`${id}`}
+              id={`${id}_${i}`}
+              value={answer}
+              checked={answer === userAnswer}
+              className="peer"
+              disabled={finished}
+              onChange={(event) => onChange(event, id)}
+            />
+            <span
+              className={`${
+                !finished ? 'radio-button' : 'radio-button-disabled'
+              } ${determineClass(answer)}`}
+            />
+          </label>
+        ))}
       </div>
     </article>
   );
 }
 
-export default Question;
+export default memo(Question);
